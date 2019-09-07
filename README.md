@@ -53,7 +53,13 @@ Enable generation of type declaration
 
 Enable `"noImplicitAny": true,`
 
-Created `src` and `tests` directory
+Created `src` and `tests` and `dist` directory
+
+Enable sourceMaps
+
+```json
+"sourceMap": true,                     /* Generates corresponding '.map' file. */
+```
 
 ## Linting and Formatting
 
@@ -92,6 +98,49 @@ Update `tslint.json`
   "tslint-config-prettier",
   "tslint-config-airbnb"
 ],
+```
+
+### Dependencies
+
+- axios
+
+Axios Config
+
+```js
+http://private-38e18c-uzduotis.apiary-mock.com/config/
+```
+
+### API
+
+```js
+/* 
+// http://private-38e18c-uzduotis.apiary-mock.com/config/cash-in
+{
+  "percents": 0.03,
+  "max": {
+    "amount": 5,
+    "currency": "EUR"
+  }
+}
+
+// http://private-38e18c-uzduotis.apiary-mock.com/config/cash-out/natural
+{
+  "percents": 0.3,
+  "week_limit": {
+    "amount": 1000,
+    "currency": "EUR"
+  }
+}
+
+// http://private-38e18c-uzduotis.apiary-mock.com/config/cash-out/juridical
+{
+  "percents": 0.3,
+  "min": {
+    "amount": 0.5,
+    "currency": "EUR"
+  }
+}
+*/
 ```
 
 ## References
