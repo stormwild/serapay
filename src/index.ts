@@ -14,7 +14,8 @@ if (!module.parent) {
     console.log('Please provide a path to an input file!');
   } else {
     // tslint:disable-next-line: no-console tslint:disable-next-line: prefer-template
-    console.log('path is: ' + path);
+    const serapay = new Serapay();
+    serapay.process(path[0]);
   }
 }
 
