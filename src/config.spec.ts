@@ -17,17 +17,52 @@ describe('Config class', () => {
   let config: Config;
 
   before(() => {
-    config = new Config();
+    const defaultConfig = {
+      baseURL: 'http://private-38e18c-uzduotis.apiary-mock.com/',
+      headers: {
+        get: {
+          Accept: 'application/json',
+        },
+      },
+    };
+    config = new Config(defaultConfig);
+  });
+
+  it('should make successful api calls', async () => {
+    expect(config.config).to.have.property('baseURL', 'http://private-38e18c-uzduotis.apiary-mock.com/');
+    expect(config.config.headers.get).to.have.property('Accept', 'application/json');
+
+    const cashInResponse = await config.cashIn();
+    expect(cashInResponse).to.have.property('percents', 0.03).that.is.a('number');
+    expect(cashInResponse).to.have.property('max').that.is.a('object');
+    expect(cashInResponse.max).to.have.property('amount', 5).that.is.a('number');
+    expect(cashInResponse.max).to.have.property('currency', 'EUR').that.is.a('string');
+
+    const cashOutNaturalResponse = await config.cashOutNatural();
+    expect(cashOutNaturalResponse).to.have.property('percents', 0.3).that.is.a('number');
+    expect(cashOutNaturalResponse).to.have.property('week_limit').that.is.a('object');
+    expect(cashOutNaturalResponse.week_limit).to.have.property('amount', 1000).that.is.a('number');
+    expect(cashOutNaturalResponse.week_limit).to.have.property('currency', 'EUR')
+      .that.is.a('string');
+
+    const cashOutJuridicalResponse = await config.cashOutJuridical();
+    expect(cashOutJuridicalResponse).to.have.property('percents', 0.3).that.is.a('number');
+    expect(cashOutJuridicalResponse).to.have.property('min').that.is.a('object');
+    expect(cashOutJuridicalResponse.min).to.have.property('amount', 0.5).that.is.a('number');
+    expect(cashOutJuridicalResponse.min).to.have.property('currency', 'EUR')
+      .that.is.a('string');
   });
 
   it('should return ICashIn when cashIn is invoked', async () => {
     const stub: SinonStub = sinon.stub(axios, 'get');
     stub.resolves({
-      max: {
-        amount: 5,
-        currency: 'EUR',
+      data: {
+        max: {
+          amount: 5,
+          currency: 'EUR',
+        },
+        percents: 0.03,
       },
-      percents: 0.03,
     });
 
     const response = await config.cashIn();
@@ -42,10 +77,12 @@ describe('Config class', () => {
   it('should return ICashOutNatural when cashOutNatural is invoked', async () => {
     const stub: SinonStub = sinon.stub(axios, 'get');
     stub.resolves({
-      percents: 0.3,
-      week_limit: {
-        amount: 1000,
-        currency: 'EUR',
+      data: {
+        percents: 0.3,
+        week_limit: {
+          amount: 1000,
+          currency: 'EUR',
+        },
       },
     });
 
@@ -61,11 +98,13 @@ describe('Config class', () => {
   it('should return ICashOutJuridical when cashOutJuridical is invoked', async () => {
     const stub: SinonStub = sinon.stub(axios, 'get');
     stub.resolves({
-      min: {
-        amount: 0.5,
-        currency: 'EUR',
+      data: {
+        min: {
+          amount: 0.5,
+          currency: 'EUR',
+        },
+        percents: 0.3,
       },
-      percents: 0.3,
     });
 
     const response = await config.cashOutJuridical();

@@ -4,11 +4,16 @@
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "serapay": "./bin/index.js"
+  },
   "scripts": {
     "build": "tsc",
+    "build:bin": "tsc --outDir ./bin/",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
-    "test": "nyc mocha -r ts-node/register src/**/*.spec.ts"
+    "test": "nyc mocha -r ts-node/register src/**/*.spec.ts",
+    "test:bin": "node ./bin/index.js"
   },
   "nyc": {
     "extension": [

@@ -62,6 +62,9 @@ typings/
 
 # Project specific
 
-# Ignore dist
+# Ignore dist and bin
 
 /dist
+/bin
+
+!.gitkeep

@@ -21,41 +21,43 @@ export interface ICashOutJuridical {
   min: IMoney;
 }
 
-const defaultConfig = {
-  baseURL: 'http://private-38e18c-uzduotis.apiary-mock.com',
-  headers: {
-    get: {
-      Accept: 'application/json',
-    },
-  },
-};
-
 class Config {
-  constructor(config: AxiosRequestConfig = defaultConfig) {
-    config.baseURL = config.baseURL || 'http://private-38e18c-uzduotis.apiary-mock.com';
+  constructor(config: AxiosRequestConfig = {
+    baseURL: 'http://private-38e18c-uzduotis.apiary-mock.com/',
+    headers: {
+      get: {
+        Accept: 'application/json',
+      },
+    },
+  }) {
+    config.baseURL = config.baseURL || 'http://private-38e18c-uzduotis.apiary-mock.com/';
     config.headers.get.Accept = config.headers.get.Accept || 'application/json';
     axios.defaults = config;
+
+    axios.interceptors.request.use(
+      // tslint:disable-next-line: no-parameter-reassignment
+      req => req = Object.assign(req, axios.defaults),
+      error => Promise.reject(error));
   }
 
-  public async cashIn(
-    url: string = 'config/cash-in',
-    config?: AxiosRequestConfig,
-  ): Promise<ICashIn> {
-    return await axios.get(url, config);
+  public get config() {
+    return axios.defaults;
   }
 
-  public async cashOutNatural(
-    url: string = 'config/cash-out/natural',
-    config?: AxiosRequestConfig,
-  ): Promise<ICashOutNatural> {
-    return await axios.get(url, config);
+  public async cashIn(url: string = 'config/cash-in'): Promise<ICashIn> {
+    const { data } = await axios.get(url);
+    return data as ICashIn;
   }
 
-  public async cashOutJuridical(
-    url: string = 'config/cash-out/juridical',
-    config?: AxiosRequestConfig,
-  ): Promise<ICashOutJuridical> {
-    return await axios.get(url, config);
+  public async cashOutNatural(url: string = 'config/cash-out/natural'): Promise<ICashOutNatural> {
+    const { data } = await axios.get(url);
+    return data as ICashOutNatural;
+  }
+
+  public async cashOutJuridical(url: string = 'config/cash-out/juridical')
+    : Promise<ICashOutJuridical> {
+    const { data } = await axios.get(url);
+    return data as ICashOutJuridical;
   }
 }
 
