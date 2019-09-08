@@ -13,7 +13,7 @@ export interface ICashIn {
 
 export interface ICashOutNatural {
   percents: number;
-  weekly_limit: IMoney;
+  week_limit: IMoney;
 }
 
 export interface ICashOutJuridical {
