@@ -67,4 +67,5 @@ typings/
 /dist/**
 /bin/**
 
+!/bin/serapay.js
 !.gitkeep
