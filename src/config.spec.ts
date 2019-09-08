@@ -8,7 +8,7 @@ import axios from 'axios';
 import sinon, { SinonStub } from 'sinon';
 
 // tslint:disable-next-line: import-name
-import Config from './config';
+import Config, { ICashIn } from './config';
 
 chai.use(chaiAsPromised);
 chai.use(dirtyChai);
@@ -31,14 +31,10 @@ describe('Config class', () => {
     });
 
     const response = await config.cashIn();
-    expect(response.percents).to.equal(0.03);
-    expect(response.max.amount).to.equal(5);
-    expect(response.max.currency).to.equal('EUR');
-
-    expect(response).to.have.property('percents');
-    expect(response).to.have.property('max');
-    expect(response.max).to.have.property('amount');
-    expect(response.max).to.have.property('currency');
+    expect(response).to.have.property('percents', 0.03).that.is.a('number');
+    expect(response).to.have.property('max').that.is.a('object');
+    expect(response.max).to.have.property('amount', 5).that.is.a('number');
+    expect(response.max).to.have.property('currency', 'EUR').that.is.a('string');
 
     stub.restore();
   });
@@ -54,14 +50,10 @@ describe('Config class', () => {
     });
 
     const response = await config.cashOutNatural();
-    expect(response.percents).to.equal(0.3);
-    expect(response.week_limit.amount).to.equal(1000);
-    expect(response.week_limit.currency).to.equal('EUR');
-
-    expect(response).to.have.property('percents');
-    expect(response).to.have.property('week_limit');
-    expect(response.week_limit).to.have.property('amount');
-    expect(response.week_limit).to.have.property('currency');
+    expect(response).to.have.property('percents', 0.3).that.is.a('number');
+    expect(response).to.have.property('week_limit').that.is.a('object');
+    expect(response.week_limit).to.have.property('amount', 1000).that.is.a('number');
+    expect(response.week_limit).to.have.property('currency', 'EUR').that.is.a('string');
 
     stub.restore();
   });
@@ -77,14 +69,10 @@ describe('Config class', () => {
     });
 
     const response = await config.cashOutJuridical();
-    expect(response.percents).to.equal(0.3);
-    expect(response.min.amount).to.equal(0.5);
-    expect(response.min.currency).to.equal('EUR');
-
-    expect(response).to.have.property('percents');
-    expect(response).to.have.property('min');
-    expect(response.min).to.have.property('amount');
-    expect(response.min).to.have.property('currency');
+    expect(response).to.have.property('percents', 0.3).that.is.a('number');
+    expect(response).to.have.property('min').that.is.a('object');
+    expect(response.min).to.have.property('amount', 0.5).that.is.a('number');
+    expect(response.min).to.have.property('currency', 'EUR').that.is.a('string');
 
     stub.restore();
   });
