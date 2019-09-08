@@ -64,7 +64,7 @@ typings/
 
 # Ignore dist and bin
 
-/dist
-/bin
+/dist/**
+/bin/**
 
 !.gitkeep
