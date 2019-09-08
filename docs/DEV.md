@@ -187,6 +187,25 @@ tsconfig.json
 
 Testing TypeScript with Mocha Chai
 
+```
+ "test": "mocha -r ts-node/register src/**/*.spec.ts"
+```
+
+Install sinon
+
+```bash
+npm i -D sinon
+npm i -D @types/sinon
+```
+
+Chai
+
+```bash
+npm i -D dirty-chai chai-as-promised
+npm i -D @types/chai-as-promised
+npm i -D @types/dirty-chai
+```
+
 - [Testing a TypeScript API With Mocha and Chai Image Testing a TypeScript API With Mocha and Chai](https://tutorialedge.net/typescript/testing-typescript-api-with-mocha-chai/)
 
 - [Writing unit tests in TypeScript](https://medium.com/@RupaniChirag/writing-unit-tests-in-typescript-d4719b8a0a40)
