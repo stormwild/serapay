@@ -8,8 +8,16 @@
     "build": "tsc",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
-    "test": "mocha -r ts-node/register src/**/*.spec.ts",
-    "coverage": "nyc -r lcov -e .ts -x \"*.spec.ts\" npm run test"
+    "test": "nyc mocha -r ts-node/register src/**/*.spec.ts"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ]
   },
   "repository": {
     "type": "git",
