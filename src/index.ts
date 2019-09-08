@@ -1,29 +1,21 @@
 
-// tslint:disable-next-line: import-name
-import Config from './config';
+class Serapay {
+  public process(path: string): void {
+    // tslint:disable-next-line: no-console tslint:disable-next-line: prefer-template
+    console.log('processing path: ' + path);
+  }
+}
 
-// export * from './config';
-
-const config = new Config();
-
-config.cashIn()
-  .then((res) => {
+if (!module.parent) {
+  // Called from the commandline
+  const path = process.argv.slice(2);
+  if (!path.length) {
     // tslint:disable-next-line: no-console
-    console.log(res);
-    // tslint:disable-next-line: align
-  }, (error) => {
-    // tslint:disable-next-line: no-console
-    console.log(error);
-  });
+    console.log('Please provide a path to an input file!');
+  } else {
+    // tslint:disable-next-line: no-console tslint:disable-next-line: prefer-template
+    console.log('path is: ' + path);
+  }
+}
 
-// // tslint:disable-next-line: no-console
-// console.log('Hello Serapay!');
-
-// program
-//   .description(description)
-//   .version(version, '-v, - version')
-//   .parse(process.argv);
-
-// if (!process.argv.slice(2).length) {
-//   program.outputHelp();
-// }
+export default Serapay;
