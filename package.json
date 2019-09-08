@@ -12,8 +12,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
     "test": "nyc mocha -r ts-node/register src/**/*.spec.ts",
-    "bin": "node ./bin/serapay.js",
-    "install": "npm i -g"
+    "bin": "node ./bin/serapay.js"
   },
   "nyc": {
     "extension": [
