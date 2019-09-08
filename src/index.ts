@@ -13,7 +13,6 @@ if (!module.parent) {
     // tslint:disable-next-line: no-console
     console.log('Please provide a path to an input file!');
   } else {
-    // tslint:disable-next-line: no-console tslint:disable-next-line: prefer-template
     const serapay = new Serapay();
     serapay.process(path[0]);
   }
