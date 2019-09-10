@@ -1,5 +1,6 @@
 
 import axios, { AxiosRequestConfig } from 'axios';
+import { stringify } from 'querystring';
 
 export interface IMoney {
   amount: number;
@@ -21,7 +22,19 @@ export interface ICashOutJuridical {
   min: IMoney;
 }
 
+export interface IConfigCache {
+  cashIn: ICashIn | null;
+  cashOutNatual: ICashOutNatural | null;
+  cashOutJuridical: ICashOutJuridical | null;
+}
+
 class Config {
+  private readonly configCache: IConfigCache = {
+    cashIn: null,
+    cashOutJuridical: null,
+    cashOutNatual: null,
+  };
+
   constructor(config: AxiosRequestConfig = {
     baseURL: 'http://private-38e18c-uzduotis.apiary-mock.com/',
     headers: {
@@ -45,19 +58,28 @@ class Config {
   }
 
   public async cashIn(url: string = 'config/cash-in'): Promise<ICashIn> {
-    const { data } = await axios.get(url);
-    return data as ICashIn;
+    if (!this.configCache.cashIn) {
+      const { data } = await axios.get(url);
+      this.configCache.cashIn = data;
+    }
+    return (this.configCache.cashIn as ICashIn);
   }
 
   public async cashOutNatural(url: string = 'config/cash-out/natural'): Promise<ICashOutNatural> {
-    const { data } = await axios.get(url);
-    return data as ICashOutNatural;
+    if (!this.configCache.cashOutNatual) {
+      const { data } = await axios.get(url);
+      this.configCache.cashOutNatual = data;
+    }
+    return this.configCache.cashOutNatual as ICashOutNatural;
   }
 
   public async cashOutJuridical(url: string = 'config/cash-out/juridical')
     : Promise<ICashOutJuridical> {
-    const { data } = await axios.get(url);
-    return data as ICashOutJuridical;
+    if (!this.configCache.cashOutJuridical) {
+      const { data } = await axios.get(url);
+      this.configCache.cashOutJuridical = data;
+    }
+    return this.configCache.cashOutJuridical as ICashOutJuridical;
   }
 }
 

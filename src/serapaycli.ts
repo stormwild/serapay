@@ -1,4 +1,6 @@
 // tslint:disable-next-line: import-name
+import Config from './config';
+// tslint:disable-next-line: import-name
 import Serapay from './serapay';
 
 if (!module.parent) {
@@ -8,7 +10,7 @@ if (!module.parent) {
     // tslint:disable-next-line: no-console
     console.log('Please provide a path to an input file!');
   } else {
-    const serapay = new Serapay();
+    const serapay = new Serapay(new Config());
     serapay.process(path[0]);
   }
 }
