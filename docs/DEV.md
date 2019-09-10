@@ -219,3 +219,7 @@ API Docs
 Read File
 
 - [Read Files with Node.js](https://stackabuse.com/read-files-with-node-js/)
+
+Round to 2 decimal places
+
+- [Round off a number upto 2 decimal place using JavaScript](https://www.geeksforgeeks.org/round-off-a-number-upto-2-decimal-place-using-javascript/)
