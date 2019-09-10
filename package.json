@@ -2,13 +2,13 @@
   "name": "serapay",
   "version": "1.0.0",
   "description": "Commandline tool that computes commission fees from cash transactions provided in a .json file",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/serapaycli.js",
+  "types": "./dist/serapaycli.d.ts",
   "bin": {
-    "serapay": "./bin/serapay.js"
+    "serapaycli": "./bin/serapaycli.js"
   },
   "scripts": {
-    "start": "node ./dist/index.js",
+    "start": "node ./dist/serapaycli.js",
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",

@@ -1,10 +1,5 @@
-
-class Serapay {
-  public process(path: string): void {
-    // tslint:disable-next-line: no-console tslint:disable-next-line: prefer-template
-    console.log('processing path: ' + path);
-  }
-}
+// tslint:disable-next-line: import-name
+import Serapay from './serapay';
 
 if (!module.parent) {
   // Called from the commandline
@@ -17,5 +12,3 @@ if (!module.parent) {
     serapay.process(path[0]);
   }
 }
-
-export default Serapay;

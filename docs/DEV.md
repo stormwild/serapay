@@ -212,4 +212,6 @@ npm i -D @types/dirty-chai
 
 - [11 Best JavaScript Unit Testing Framework and Tools](https://geekflare.com/javascript-unit-testing/)
 
-- []()
+API Docs
+
+- [uzduotis](https://uzduotis.docs.apiary.io/#)
