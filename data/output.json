@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "transactions": [
+      {
+        "date": "2016-01-05T00:00:00.000Z",
+        "operation": {
+          "amount": 200,
+          "currency": "EUR"
+        },
+        "type": "cash_in"
+      },
+      {
+        "date": "2016-01-06T00:00:00.000Z",
+        "operation": {
+          "amount": 30000,
+          "currency": "EUR"
+        },
+        "type": "cash_out"
+      },
+      {
+        "date": "2016-01-07T00:00:00.000Z",
+        "operation": {
+          "amount": 1000,
+          "currency": "EUR"
+        },
+        "type": "cash_out"
+      },
+      {
+        "date": "2016-01-07T00:00:00.000Z",
+        "operation": {
+          "amount": 100,
+          "currency": "EUR"
+        },
+        "type": "cash_out"
+      },
+      {
+        "date": "2016-01-10T00:00:00.000Z",
+        "operation": {
+          "amount": 100,
+          "currency": "EUR"
+        },
+        "type": "cash_out"
+      },
+      {
+        "date": "2016-02-15T00:00:00.000Z",
+        "operation": {
+          "amount": 300,
+          "currency": "EUR"
+        },
+        "type": "cash_out"
+      }
+    ],
+    "type": "natural"
+  },
+  {
+    "id": 2,
+    "transactions": [
+      {
+        "date": "2016-01-06T00:00:00.000Z",
+        "operation": {
+          "amount": 300,
+          "currency": "EUR"
+        },
+        "type": "cash_out"
+      },
+      {
+        "date": "2016-01-10T00:00:00.000Z",
+        "operation": {
+          "amount": 1000000,
+          "currency": "EUR"
+        },
+        "type": "cash_in"
+      }
+    ],
+    "type": "juridical"
+  },
+  {
+    "id": 3,
+    "transactions": [
+      {
+        "date": "2016-01-10T00:00:00.000Z",
+        "operation": {
+          "amount": 1000,
+          "currency": "EUR"
+        },
+        "type": "cash_out"
+      }
+    ],
+    "type": "natural"
+  }
+]

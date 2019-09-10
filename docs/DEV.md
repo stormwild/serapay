@@ -215,3 +215,7 @@ npm i -D @types/dirty-chai
 API Docs
 
 - [uzduotis](https://uzduotis.docs.apiary.io/#)
+
+Read File
+
+- [Read Files with Node.js](https://stackabuse.com/read-files-with-node-js/)
