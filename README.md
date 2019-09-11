@@ -102,7 +102,77 @@ $ npm start
 Please provide a path to an input file!
 ```
 
+## Run with Sample Data
+
+### Run from linked serapaycli
+
+Build the application
+
+```
+npm i
+npm run build
+npm link
+```
+
+Run with the sample data. Make sure you are within the application root folder
+
+```
+serapaycli ./data/input.json
+```
+
+Output
+
+```bash
+0.06
+0.90
+87.00
+3.00
+0.30
+0.30
+5.00
+0.00
+0.00
+```
+
+### Run from dist
+
+Build the application
+
+```
+npm run build
+```
+
+Run with sample data
+
+```
+npm run start ./data/input.json
+```
+
+Alternatively
+
+```
+node ./dist/serapaycli.js ./data/input.json
+```
+
+Output
+
+```bash
+0.06
+0.90
+87.00
+3.00
+0.30
+0.30
+5.00
+0.00
+0.00
+```
+
 ## Log
+
+### Tue 10 Sep 2019
+
+Computation seems to be working correctly
 
 ### Sun 8 Sep 2019
 
