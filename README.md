@@ -74,8 +74,8 @@ serapay
 Sample output
 
 ```bash
-$ serapay
-Usage: serapay [options] <path>
+$ serapaycli
+Usage: serapaycli [options] <path>
 
 Commandline tool that computes commission fees from cash transactions provided in a .json file
 
@@ -97,7 +97,7 @@ Sample output
 $ npm start
 
 > serapay@1.0.0 start /Users/stormwild/Source/paysera/cliapp/serapay
-> node ./dist/index.js
+> node ./dist/serapaycli.js
 
 Please provide a path to an input file!
 ```
