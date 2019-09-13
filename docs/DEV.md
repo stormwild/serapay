@@ -223,3 +223,41 @@ Read File
 Round to 2 decimal places
 
 - [Round off a number upto 2 decimal place using JavaScript](https://www.geeksforgeeks.org/round-off-a-number-upto-2-decimal-place-using-javascript/)
+
+## Feedback
+
+First of all, thank you for the time taken to complete the task.
+
+We are pleased to see your expressed desire to work with us.
+
+In regard to evaluate your skills better we would like to ask you for some improvements in your implementation.
+business logic(calculation of commissions) should be tested. Now You only test configuration endpoints, what's not very useful
+for example if we have such data:
+
+```json
+[
+  {
+    "date": "2019-01-01",
+    "user_id": 1,
+    "user_type": "natural",
+    "type": "cash_out",
+    "operation": { "amount": 200.0, "currency": "EUR" }
+  },
+  {
+    "date": "2019-01-01",
+    "user_id": 1,
+    "user_type": "natural",
+    "type": "cash_out",
+    "operation": { "amount": 900.0, "currency": "EUR" }
+  }
+]
+```
+
+commissions should only be calculated from exceeded amount(same week), so output should be:
+
+```bash
+0.00
+0.03
+```
+
+copy paste code should be reduced. For example, I see several places where commissions are calculated identically: `Math.ceil(result * 100) / 100`. It would be very nice that you reuse whole commissions calculation logic, because now it's pretty the same.
