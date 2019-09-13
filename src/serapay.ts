@@ -48,19 +48,20 @@ export interface IConfig {
 }
 
 class Serapay {
-  private readonly users: IUser[] = [];
-  private readonly input: IInput[] = [];
-  private readonly commissions: number[] = [];
-
   constructor(private config: Config) { }
 
-  public process(path: string): void {
+  public start(path: string): void {
     fs.readFile(path, 'utf8', (err, data) => {
       if (err) throw err;
-      this.load(this.input.concat(JSON.parse(data, (key, value) => {
-        return value.date ? Object.assign(value, { date: new Date(value.date) }) : value;
-      })));
+      const input: IInput[] = this.getInput(data);
+      this.process(input);
     });
+  }
+
+  private getInput(data: string): IInput[] {
+    return JSON.parse(data, (key, value) => {
+      return value.date ? Object.assign(value, { date: new Date(value.date) }) : value;
+    }) as IInput[];
   }
 
   private async getConfig(): Promise<IConfig> {
@@ -74,12 +75,32 @@ class Serapay {
     return { cashIn, cashOutNatural, cashOutJuridical };
   }
 
-  private async load(data: IInput[]) {
+  private async process(data: IInput[]) {
     const config = await this.getConfig();
-    // map the transaction list to a collection of users with a history of transactions
+    const users: IUser[] = this.createUserCollection(data);
+    const commissions = this.populateCommissions(data, config, users);
+    this.displayCommissions(commissions);
+  }
+
+  private displayCommissions(commissions: number[]) {
+    // tslint:disable-next-line: no-console
+    commissions.forEach(c => console.log(c.toFixed(2)));
+  }
+
+  private populateCommissions(data: IInput[], config: IConfig, users: IUser[]): number[] {
+    const commissions: number[] = [];
     data.forEach((t: IInput) => {
-      if (this.users.findIndex(u => u.id === t.user_id) === -1) {
-        this.users.push({
+      const c = this.computeCommission(t, config, users);
+      commissions.push(c);
+    });
+    return commissions;
+  }
+
+  private createUserCollection(data: IInput[]): IUser[] {
+    const users: IUser[] = [];
+    data.forEach((t: IInput) => {
+      if (users.findIndex(u => u.id === t.user_id) === -1) {
+        users.push({
           id: t.user_id,
           transactions: [{
             date: new Date(t.date),
@@ -89,7 +110,7 @@ class Serapay {
           type: (UserType as any)[t.user_type],
         });
       } else {
-        const user: IUser = this.users.find(u => u.id === t.user_id) as IUser;
+        const user: IUser = users.find(u => u.id === t.user_id) as IUser;
         user.transactions.push({
           date: new Date(t.date),
           operation: t.operation,
@@ -97,25 +118,7 @@ class Serapay {
         });
       }
     });
-
-    data.forEach((t: IInput) => {
-      const c = this.computeCommission(t, config, this.users);
-      this.commissions.push(c);
-      // tslint:disable-next-line: no-console
-      //console.log(t.user_id, t.user_type, t.type, t.operation.amount);
-      console.log(c.toFixed(2));
-    });
-
-    // // tslint:disable-next-line: no-console
-    // console.log(this.users.length);
-    // _.each(this.users, (u) => {
-    //   // tslint:disable-next-line: no-console
-    //   console.log(u.transactions.length);
-    // });
-    // // tslint:disable-next-line: no-console
-    // console.log(data.length);
-    // // tslint:disable-next-line: no-console
-    // console.log(JSON.stringify(this.users));
+    return users;
   }
 
   private computeCommission(

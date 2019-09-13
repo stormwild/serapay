@@ -11,6 +11,6 @@ if (!module.parent) {
     console.log('Please provide a path to an input file!');
   } else {
     const serapay = new Serapay(new Config());
-    serapay.process(path[0]);
+    serapay.start(path[0]);
   }
 }
