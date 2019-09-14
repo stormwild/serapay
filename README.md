@@ -33,7 +33,7 @@ npm test
 Sample test output
 
 ```bash
-$ npm run test
+$ npm test
 
 > serapay@1.0.0 test /path/to/serapay
 > nyc mocha -r ts-node/register src/**/*.spec.ts
@@ -41,20 +41,25 @@ $ npm run test
 
 
   Config class
-    ✓ should make successful api calls (1599ms)
+    ✓ should make successful api calls (1843ms)
+    ✓ should return IConfig when getConfig is invoked
     ✓ should return ICashIn when cashIn is invoked
     ✓ should return ICashOutNatural when cashOutNatural is invoked
     ✓ should return ICashOutJuridical when cashOutJuridical is invoked
 
+  Serapay class
+    ✓ should return expected output when getCommissions is invoked with test data
 
-  4 passing (2s)
 
------------|----------|----------|----------|----------|-------------------|
-File       |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
------------|----------|----------|----------|----------|-------------------|
-All files  |    96.43 |       60 |     87.5 |    95.45 |                   |
- config.ts |    96.43 |       60 |     87.5 |    95.45 |                40 |
------------|----------|----------|----------|----------|-------------------|
+  6 passing (3s)
+
+------------|----------|----------|----------|----------|-------------------|
+File        |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+------------|----------|----------|----------|----------|-------------------|
+All files   |    97.37 |    78.57 |    96.67 |    96.97 |                   |
+ config.ts  |    97.67 |    72.73 |    88.89 |    97.06 |                59 |
+ serapay.ts |    97.18 |    82.35 |      100 |    96.92 |           129,157 |
+------------|----------|----------|----------|----------|-------------------|
 ```
 
 ## Run
@@ -132,6 +137,8 @@ Output
 5.00
 0.00
 0.00
+0.00
+0.30
 ```
 
 ### Run from dist
@@ -166,9 +173,19 @@ Output
 5.00
 0.00
 0.00
+0.00
+0.30
 ```
 
 ## Log
+
+### Sat 14 Sep 2019
+
+- Additional test data added
+- Refactor code
+- Correct commission returned
+- Unit test added for Serapay class
+- All tests passing
 
 ### Tue 10 Sep 2019
 
