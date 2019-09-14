@@ -8,10 +8,12 @@ import Config, { ICashIn, ICashOutJuridical, ICashOutNatural } from './config';
 
 export interface IInput {
   date: Date;
-  user_id: number;
-  user_type: UserType;
-  type: TransactionType;
+  id: number;
   operation: IOperation;
+  type: TransactionType;
+  user_id: number;
+  user_trxn_id: number;
+  user_type: UserType;
 }
 
 export enum UserType {
@@ -30,6 +32,7 @@ export interface IOperation {
 }
 
 export interface ITransaction {
+  id: number;
   date: Date;
   type: TransactionType;
   operation: IOperation;
@@ -51,17 +54,27 @@ class Serapay {
   constructor(private config: Config) { }
 
   public start(path: string): void {
-    fs.readFile(path, 'utf8', (err, data) => {
+    fs.readFile(path, 'utf8', async (err, data) => {
       if (err) throw err;
+      const config = await this.getConfig();
       const input: IInput[] = this.getInput(data);
-      this.process(input);
+      const users: IUser[] = this.createUserCollection(input);
+      const commissions = input.map((t: IInput) => this.computeCommission(t, config, users));
+      // tslint:disable-next-line: no-console
+      commissions.forEach(c => console.log(c.toFixed(2)));
     });
   }
 
   private getInput(data: string): IInput[] {
     return JSON.parse(data, (key, value) => {
-      return value.date ? Object.assign(value, { date: new Date(value.date) }) : value;
-    }) as IInput[];
+      if (value.date) {
+        return Object.assign(value, { date: new Date(value.date) });
+      }
+      return value;
+    }).map((input: IInput, index: number) => {
+      input.id = index + 1;
+      return input;
+    });
   }
 
   private async getConfig(): Promise<IConfig> {
@@ -75,27 +88,6 @@ class Serapay {
     return { cashIn, cashOutNatural, cashOutJuridical };
   }
 
-  private async process(data: IInput[]) {
-    const config = await this.getConfig();
-    const users: IUser[] = this.createUserCollection(data);
-    const commissions = this.populateCommissions(data, config, users);
-    this.displayCommissions(commissions);
-  }
-
-  private displayCommissions(commissions: number[]) {
-    // tslint:disable-next-line: no-console
-    commissions.forEach(c => console.log(c.toFixed(2)));
-  }
-
-  private populateCommissions(data: IInput[], config: IConfig, users: IUser[]): number[] {
-    const commissions: number[] = [];
-    data.forEach((t: IInput) => {
-      const c = this.computeCommission(t, config, users);
-      commissions.push(c);
-    });
-    return commissions;
-  }
-
   private createUserCollection(data: IInput[]): IUser[] {
     const users: IUser[] = [];
     data.forEach((t: IInput) => {
@@ -104,21 +96,33 @@ class Serapay {
           id: t.user_id,
           transactions: [{
             date: new Date(t.date),
+            id: 1,
             operation: t.operation,
             type: (TransactionType as any)[t.type],
           }],
           type: (UserType as any)[t.user_type],
         });
+        t.user_trxn_id = 1;
       } else {
         const user: IUser = users.find(u => u.id === t.user_id) as IUser;
         user.transactions.push({
           date: new Date(t.date),
+          id: user.transactions.length + 1,
           operation: t.operation,
           type: (TransactionType as any)[t.type],
         });
+        t.user_trxn_id = user.transactions.length;
       }
     });
     return users;
+  }
+
+  private getCommission(
+    amount: number,
+    percentage: number,
+    round: (num: number) => number = Math.ceil,
+  ) {
+    return round(amount * (percentage / 100) * 100) / 100;
   }
 
   private computeCommission(
@@ -126,92 +130,58 @@ class Serapay {
     config: IConfig,
     users: IUser[],
   ): number {
-    // identify the transaction as cashin
     if ((TransactionType as any)[t.type] === TransactionType.cash_in) {
-      // Percentage from amount is calculated and maximum amount is applied for cash in commissions.
-      // You should fetch configuration from this endpoint.
-      // In current state, this means that commission fee is 0.03% from total amount, 
-      // but no more than 5.00 EUR.
-      const cashIn = config.cashIn;
-      const result = t.operation.amount * (cashIn.percents / 100);
-      const commission = Math.ceil(result * 100) / 100;
-      // tslint:disable-next-line: no-console tslint:disable-next-line: max-line-length
-      //console.log('cashin', t.operation.amount, cashIn.percents, result, commission, cashIn.max.amount, commission > cashIn.max.amount);
-      return commission > cashIn.max.amount ? cashIn.max.amount : commission;
-    }
-
-    if ((UserType as any)[t.user_type] === UserType.natural) {
-      // Percentage from amount is applied. Also natural persons get specific amount per week 
-      // (from Monday to Sunday) free of charge.
-      // You should fetch configuration from this endpoint.
-      // In current API state, this means that default commission fee is 0.3% 
-      // from cash out amount, but 1000.00 EUR per week (from monday to sunday) is free of charge.
-      // If total cash out amount is exceeded - commission is calculated only 
-      // from exceeded amount (that is, for 1000.00 EUR there is still no commission fee).
-      const cashOutNatural = config.cashOutNatural;
-      // tslint:disable-next-line: max-line-length
-
-      if (t.operation.amount > cashOutNatural.week_limit.amount) {
-        const amount = t.operation.amount - cashOutNatural.week_limit.amount;
-        const result = amount * (cashOutNatural.percents / 100);
-        const commission = Math.ceil(result * 100) / 100;
-        return commission;
-      }
-
-      // has there been any other cashout amount transacted within the current week?
-      // how do we check for this
-      // we can query the users transactions for cash out transactions within the current week
-      // how do we compute for the current week given a date?
-      // Well we compute the given day of the week from the date
-      // then we compute the start and end dates for the monday and sunday
-      // if yes has that amount plus this amount greater than cashOutNatural.week_limit.amount
-      // if yes then charge the current operation amount with the percents
-      // const result = (t.operation.amount - cashOutNatural.week_limit.amount) 
-      // * (cashOutNatural.percents / 100);
-
-      const user = users.find(u => u.id === t.user_id);
-      if (user) {
-        // we query the data for transactions within and prior 
-        // to the current date but within the week
-        const start = startOfWeek(t.date, { weekStartsOn: 1 });
-        const total = user.transactions
-          .filter((ut: ITransaction) => {
-            return ((TransactionType as any)[ut.type] === TransactionType.cash_out)
-              && (isSameDay(ut.date, start) || isAfter(ut.date, start))
-              && isBefore(ut.date, t.date);
-          })
-          // tslint:disable-next-line: no-parameter-reassignment
-          .reduce((sum, curr) => sum += curr.operation.amount, 0);
-
-        if (total > cashOutNatural.week_limit.amount
-          || (total + t.operation.amount) > cashOutNatural.week_limit.amount) {
-          let result = (t.operation.amount) * (cashOutNatural.percents / 100);
-          let commission = Math.ceil(result * 100) / 100;
-          return commission;
-        }
-
-        return 0;
-      }
-      return 0;
+      const commission = this.getCommission(t.operation.amount, config.cashIn.percents);
+      return commission > config.cashIn.max.amount ? config.cashIn.max.amount : commission;
     }
 
     if ((UserType as any)[t.user_type] === UserType.juridical) {
-      // Percentage from amount is calculated and minimum amount is applied for commissions.
-      // You should fetch configuration from this endpoint.
-      // In current API state, this means that commission fee is 0.3% from amount, 
-      // but not less than 0.50 EUR for operation.
-      const cashOutJuridical = config.cashOutJuridical;
-      let result = t.operation.amount * (cashOutJuridical.percents / 100);
-      let commission = Math.ceil(result * 100) / 100;
-      return commission > cashOutJuridical.min.amount ? commission : cashOutJuridical.min.amount;
+      const commission = this.getCommission(t.operation.amount, config.cashOutJuridical.percents);
+      return commission >
+        config.cashOutJuridical.min.amount ? commission : config.cashOutJuridical.min.amount;
     }
 
-    // Rounding After calculating commission fee, 
-    // it's rounded to the smallest currency item (for example, for EUR currency - cents) 
-    // to upper bound (ceiled). For example, 0.023 EUR should be rounded to 3 Euro cents.
+    if ((UserType as any)[t.user_type] === UserType.natural) {
+      const weekTransactions = this.getPriorTransactionsInWeek(t, users);
+      if (weekTransactions) {
+        // tslint:disable-next-line: no-parameter-reassignment
+        const total = weekTransactions.reduce((sum, curr) => sum += curr.operation.amount, 0);
+
+        if (total > config.cashOutNatural.week_limit.amount) {
+          return this.getCommission(t.operation.amount, config.cashOutNatural.percents);
+        }
+
+        if ((total + t.operation.amount) > config.cashOutNatural.week_limit.amount) {
+          return this.getCommission(
+            ((total + t.operation.amount) - config.cashOutNatural.week_limit.amount),
+            config.cashOutNatural.percents,
+          );
+        }
+      }
+
+      if (t.operation.amount > config.cashOutNatural.week_limit.amount) {
+        return this.getCommission(
+          (t.operation.amount - config.cashOutNatural.week_limit.amount),
+          config.cashOutNatural.percents,
+        );
+      }
+    }
+
     return 0;
   }
 
+  private getPriorTransactionsInWeek(t: IInput, users: IUser[]): ITransaction[] {
+    const user = users.find(u => u.id === t.user_id);
+    if (user) {
+      const start = startOfWeek(t.date, { weekStartsOn: 1 });
+      return user.transactions
+        .filter((ut: ITransaction) => ut.type === TransactionType.cash_out)
+        .filter((ut: ITransaction) => isSameDay(ut.date, start) || isAfter(ut.date, start))
+        .filter((ut: ITransaction) => isBefore(ut.date, t.date) || isSameDay(ut.date, t.date))
+        .filter((ut: ITransaction) => ut.id < t.user_trxn_id);
+    }
+    return [];
+  }
 }
 
 export default Serapay;

@@ -1,112 +1,134 @@
 [
   {
-    "date": "2016-01-05",
+    "date": "2016-01-05T00:00:00.000Z",
     "user_id": 1,
     "user_type": "natural",
     "type": "cash_in",
     "operation": {
-      "amount": 200.00,
+      "amount": 200,
       "currency": "EUR"
-    }
+    },
+    "id": 1,
+    "user_trxn_id": 1
   },
   {
-    "date": "2016-01-06",
+    "date": "2016-01-06T00:00:00.000Z",
     "user_id": 2,
     "user_type": "juridical",
     "type": "cash_out",
     "operation": {
-      "amount": 300.00,
+      "amount": 300,
       "currency": "EUR"
-    }
+    },
+    "id": 2,
+    "user_trxn_id": 1
   },
   {
-    "date": "2016-01-06",
+    "date": "2016-01-06T00:00:00.000Z",
     "user_id": 1,
     "user_type": "natural",
     "type": "cash_out",
     "operation": {
       "amount": 30000,
       "currency": "EUR"
-    }
+    },
+    "id": 3,
+    "user_trxn_id": 2
   },
   {
-    "date": "2016-01-07",
+    "date": "2016-01-07T00:00:00.000Z",
     "user_id": 1,
     "user_type": "natural",
     "type": "cash_out",
     "operation": {
-      "amount": 1000.00,
+      "amount": 1000,
       "currency": "EUR"
-    }
+    },
+    "id": 4,
+    "user_trxn_id": 3
   },
   {
-    "date": "2016-01-07",
+    "date": "2016-01-07T00:00:00.000Z",
     "user_id": 1,
     "user_type": "natural",
     "type": "cash_out",
     "operation": {
-      "amount": 100.00,
+      "amount": 100,
       "currency": "EUR"
-    }
+    },
+    "id": 5,
+    "user_trxn_id": 4
   },
   {
-    "date": "2016-01-10",
+    "date": "2016-01-10T00:00:00.000Z",
     "user_id": 1,
     "user_type": "natural",
     "type": "cash_out",
     "operation": {
-      "amount": 100.00,
+      "amount": 100,
       "currency": "EUR"
-    }
+    },
+    "id": 6,
+    "user_trxn_id": 5
   },
   {
-    "date": "2016-01-10",
+    "date": "2016-01-10T00:00:00.000Z",
     "user_id": 2,
     "user_type": "juridical",
     "type": "cash_in",
     "operation": {
-      "amount": 1000000.00,
+      "amount": 1000000,
       "currency": "EUR"
-    }
+    },
+    "id": 7,
+    "user_trxn_id": 2
   },
   {
-    "date": "2016-01-10",
+    "date": "2016-01-10T00:00:00.000Z",
     "user_id": 3,
     "user_type": "natural",
     "type": "cash_out",
     "operation": {
-      "amount": 1000.00,
+      "amount": 1000,
       "currency": "EUR"
-    }
+    },
+    "id": 8,
+    "user_trxn_id": 1
   },
   {
-    "date": "2016-02-15",
+    "date": "2016-02-15T00:00:00.000Z",
     "user_id": 1,
     "user_type": "natural",
     "type": "cash_out",
     "operation": {
-      "amount": 300.00,
+      "amount": 300,
       "currency": "EUR"
-    }
+    },
+    "id": 9,
+    "user_trxn_id": 6
   },
   {
-    "date": "2019-01-01",
+    "date": "2019-01-01T00:00:00.000Z",
     "user_id": 1,
     "user_type": "natural",
     "type": "cash_out",
     "operation": {
-      "amount": 200.0,
+      "amount": 200,
       "currency": "EUR"
-    }
+    },
+    "id": 10,
+    "user_trxn_id": 7
   },
   {
-    "date": "2019-01-01",
+    "date": "2019-01-01T00:00:00.000Z",
     "user_id": 1,
     "user_type": "natural",
     "type": "cash_out",
     "operation": {
-      "amount": 900.0,
+      "amount": 900,
       "currency": "EUR"
-    }
+    },
+    "id": 11,
+    "user_trxn_id": 8
   }
 ]
