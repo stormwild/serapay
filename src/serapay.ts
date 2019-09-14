@@ -121,7 +121,7 @@ class Serapay {
     amount: number,
     percentage: number,
     round: (num: number) => number = Math.ceil,
-  ) {
+  ): number {
     return round(amount * (percentage / 100) * 100) / 100;
   }
 
@@ -142,10 +142,10 @@ class Serapay {
     }
 
     if ((UserType as any)[t.user_type] === UserType.natural) {
-      const weekTransactions = this.getPriorTransactionsInWeek(t, users);
-      if (weekTransactions) {
+      const transactions = this.getPriorTransactionsInWeek(t, users);
+      if (transactions) {
         // tslint:disable-next-line: no-parameter-reassignment
-        const total = weekTransactions.reduce((sum, curr) => sum += curr.operation.amount, 0);
+        const total = transactions.reduce((sum, curr) => sum += curr.operation.amount, 0);
 
         if (total > config.cashOutNatural.week_limit.amount) {
           return this.getCommission(t.operation.amount, config.cashOutNatural.percents);
