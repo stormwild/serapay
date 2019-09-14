@@ -73,7 +73,7 @@ npm link
 Run from command line
 
 ```bash
-serapay
+serapaycli
 ```
 
 Sample output
