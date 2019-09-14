@@ -28,7 +28,7 @@ describe('Config class', () => {
     config = new Config(defaultConfig);
   });
 
-  it('should make successful api calls', async () => {
+  xit('should make successful api calls', async () => {
     expect(config.config).to.have.property('baseURL', 'http://private-38e18c-uzduotis.apiary-mock.com/');
     expect(config.config.headers.get).to.have.property('Accept', 'application/json');
 

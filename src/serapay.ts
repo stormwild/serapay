@@ -2,9 +2,8 @@ import isAfter from 'date-fns/isAfter';
 import isBefore from 'date-fns/isBefore';
 import isSameDay from 'date-fns/isSameDay';
 import startOfWeek from 'date-fns/startOfWeek';
-import fs from 'fs';
 // tslint:disable-next-line: import-name
-import Config, { ICashIn, ICashOutJuridical, ICashOutNatural } from './config';
+import Config, { ICashIn, ICashOutJuridical, ICashOutNatural, IConfig } from './config';
 
 export interface IInput {
   date: Date;
@@ -44,28 +43,14 @@ export interface IUser {
   transactions: ITransaction[];
 }
 
-export interface IConfig {
-  cashIn: ICashIn;
-  cashOutNatural: ICashOutNatural;
-  cashOutJuridical: ICashOutJuridical;
-}
-
 class Serapay {
-  constructor(private config: Config) { }
-
-  public start(path: string): void {
-    fs.readFile(path, 'utf8', async (err, data) => {
-      if (err) throw err;
-      const config = await this.getConfig();
-      const input: IInput[] = this.getInput(data);
-      const users: IUser[] = this.createUserCollection(input);
-      const commissions = input.map((t: IInput) => this.computeCommission(t, config, users));
-      // tslint:disable-next-line: no-console
-      commissions.forEach(c => console.log(c.toFixed(2)));
-    });
+  public getCommissions(data: string, config: IConfig): number[] {
+    const input: IInput[] = this.getInput(data);
+    const users: IUser[] = this.createUserCollection(input);
+    return input.map((t: IInput) => this.computeCommission(t, config, users));
   }
 
-  private getInput(data: string): IInput[] {
+  public getInput(data: string): IInput[] {
     return JSON.parse(data, (key, value) => {
       if (value.date) {
         return Object.assign(value, { date: new Date(value.date) });
@@ -77,18 +62,7 @@ class Serapay {
     });
   }
 
-  private async getConfig(): Promise<IConfig> {
-    let cashIn: ICashIn;
-    let cashOutNatural: ICashOutNatural;
-    let cashOutJuridical: ICashOutJuridical;
-
-    cashIn = await this.config.cashIn();
-    cashOutNatural = await this.config.cashOutNatural();
-    cashOutJuridical = await this.config.cashOutJuridical();
-    return { cashIn, cashOutNatural, cashOutJuridical };
-  }
-
-  private createUserCollection(data: IInput[]): IUser[] {
+  public createUserCollection(data: IInput[]): IUser[] {
     const users: IUser[] = [];
     data.forEach((t: IInput) => {
       if (users.findIndex(u => u.id === t.user_id) === -1) {
@@ -117,15 +91,7 @@ class Serapay {
     return users;
   }
 
-  private getCommission(
-    amount: number,
-    percentage: number,
-    round: (num: number) => number = Math.ceil,
-  ): number {
-    return round(amount * (percentage / 100) * 100) / 100;
-  }
-
-  private computeCommission(
+  public computeCommission(
     t: IInput,
     config: IConfig,
     users: IUser[],
@@ -168,6 +134,14 @@ class Serapay {
     }
 
     return 0;
+  }
+
+  private getCommission(
+    amount: number,
+    percentage: number,
+    round: (num: number) => number = Math.ceil,
+  ): number {
+    return round(amount * (percentage / 100) * 100) / 100;
   }
 
   private getPriorTransactionsInWeek(t: IInput, users: IUser[]): ITransaction[] {

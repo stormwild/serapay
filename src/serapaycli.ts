@@ -1,5 +1,6 @@
+import fs from 'fs';
 // tslint:disable-next-line: import-name
-import Config from './config';
+import Config, { IConfig } from './config';
 // tslint:disable-next-line: import-name
 import Serapay from './serapay';
 
@@ -10,7 +11,13 @@ if (!module.parent) {
     // tslint:disable-next-line: no-console
     console.log('Please provide a path to an input file!');
   } else {
-    const serapay = new Serapay(new Config());
-    serapay.start(path[0]);
+    fs.readFile(path[0], 'utf8', async (err, data) => {
+      if (err) throw err;
+      const config: IConfig = await new Config().getConfig();
+      const serapay: Serapay = new Serapay();
+      const commissions: number[] = serapay.getCommissions(data, config);
+      // tslint:disable-next-line: no-console
+      commissions.forEach(c => console.log(c.toFixed(2)));
+    });
   }
 }

@@ -28,6 +28,12 @@ export interface IConfigCache {
   cashOutJuridical: ICashOutJuridical | null;
 }
 
+export interface IConfig {
+  cashIn: ICashIn;
+  cashOutNatural: ICashOutNatural;
+  cashOutJuridical: ICashOutJuridical;
+}
+
 class Config {
   private readonly configCache: IConfigCache = {
     cashIn: null,
@@ -53,8 +59,15 @@ class Config {
       error => Promise.reject(error));
   }
 
-  public get config() {
-    return axios.defaults;
+  public async getConfig(): Promise<IConfig> {
+    let cashIn: ICashIn;
+    let cashOutNatural: ICashOutNatural;
+    let cashOutJuridical: ICashOutJuridical;
+
+    cashIn = await this.cashIn();
+    cashOutNatural = await this.cashOutNatural();
+    cashOutJuridical = await this.cashOutJuridical();
+    return { cashIn, cashOutNatural, cashOutJuridical };
   }
 
   public async cashIn(url: string = 'config/cash-in'): Promise<ICashIn> {
