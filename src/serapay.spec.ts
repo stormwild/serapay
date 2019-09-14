@@ -33,7 +33,7 @@ describe('Serapay class', () => {
     serapay = new Serapay();
   });
 
-  it('should return expected output when getCommission is invoked with test data', () => {
+  it('should return expected output when getCommissions is invoked with test data', () => {
     const path = './data/input.json';
     expect(path).to.be.a.file().with.json();
     const data: string = fs.readFileSync(path, 'utf8');
