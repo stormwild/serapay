@@ -59,6 +59,10 @@ class Config {
       error => Promise.reject(error));
   }
 
+  public get config(): AxiosRequestConfig {
+    return axios.defaults;
+  }
+
   public async getConfig(): Promise<IConfig> {
     let cashIn: ICashIn;
     let cashOutNatural: ICashOutNatural;

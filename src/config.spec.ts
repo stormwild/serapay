@@ -28,7 +28,29 @@ describe('Config class', () => {
     config = new Config(defaultConfig);
   });
 
-  xit('should make successful api calls', async () => {
+  it('getConfig should return IConfig', async () => {
+    const cfg = await config.getConfig();
+    expect(cfg).to.have.property('cashIn');
+    expect(cfg).to.have.property('cashOutNatural');
+    expect(cfg).to.have.property('cashOutJuridical');
+
+    expect(cfg.cashIn).to.have.property('percents');
+    expect(cfg.cashIn).to.have.property('max');
+    expect(cfg.cashIn.max).to.have.property('amount');
+    expect(cfg.cashIn.max).to.have.property('currency');
+
+    expect(cfg.cashOutNatural).to.have.property('percents');
+    expect(cfg.cashOutNatural).to.have.property('week_limit');
+    expect(cfg.cashOutNatural.week_limit).to.have.property('amount');
+    expect(cfg.cashOutNatural.week_limit).to.have.property('currency');
+
+    expect(cfg.cashOutJuridical).to.have.property('percents');
+    expect(cfg.cashOutJuridical).to.have.property('min');
+    expect(cfg.cashOutJuridical.min).to.have.property('amount');
+    expect(cfg.cashOutJuridical.min).to.have.property('currency');
+  });
+
+  it('should make successful api calls', async () => {
     expect(config.config).to.have.property('baseURL', 'http://private-38e18c-uzduotis.apiary-mock.com/');
     expect(config.config.headers.get).to.have.property('Accept', 'application/json');
 
