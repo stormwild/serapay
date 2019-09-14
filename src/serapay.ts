@@ -50,7 +50,7 @@ class Serapay {
     return input.map((t: IInput) => this.computeCommission(t, config, users));
   }
 
-  public getInput(data: string): IInput[] {
+  private getInput(data: string): IInput[] {
     return JSON.parse(data, (key, value) => {
       if (value.date) {
         return Object.assign(value, { date: new Date(value.date) });
@@ -62,7 +62,7 @@ class Serapay {
     });
   }
 
-  public createUserCollection(data: IInput[]): IUser[] {
+  private createUserCollection(data: IInput[]): IUser[] {
     const users: IUser[] = [];
     data.forEach((t: IInput) => {
       if (users.findIndex(u => u.id === t.user_id) === -1) {
@@ -91,7 +91,7 @@ class Serapay {
     return users;
   }
 
-  public computeCommission(
+  private computeCommission(
     t: IInput,
     config: IConfig,
     users: IUser[],
